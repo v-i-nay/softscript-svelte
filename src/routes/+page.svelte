@@ -28,7 +28,7 @@
     style="background-image: url('{getImageUrl(banner.image.asset._ref)}');"
   >
     <div class="overlay">
-      <h1>
+      <h2>
         {#each banner.title[0]?.children as child}
           {#if child.marks && child.marks.includes("strong")}
             <strong>{child.text}</strong>
@@ -36,7 +36,7 @@
             {child.text}
           {/if}
         {/each}
-      </h1>
+      </h2>
 
       <p>{banner.description}</p>
 
@@ -64,6 +64,12 @@ body{
     justify-content: center;
     background: rgba(0, 0, 0, 0.6);
   }
+  .banner:after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+}
 
   .overlay {
    
@@ -73,12 +79,11 @@ body{
     width: 100%;
   }
 
-  h1 {
-    font-size: 2rem;
-    margin-bottom:5px;
-  }
+ h2 {
+    font-size: 35px;
+}
   strong{
-    color:blue;
+    color:#339beb;
   }
 
   p {
