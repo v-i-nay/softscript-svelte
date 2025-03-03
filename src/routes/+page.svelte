@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import axios from "axios";
+  import TitleDescription from "../lib/components/titleDescription.svelte"
 
   let banner = null;
 
@@ -48,11 +49,10 @@
 {:else}
   <p>Loading...</p>
 {/if}
+<TitleDescription />
 
 <style>
-body{
-  margin:0 !important;
-}
+
   .banner {
     position: relative;
     width: 100%;
