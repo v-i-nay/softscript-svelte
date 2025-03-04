@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import TitleDescription from "../lib/components/titleDescription.svelte"
+  import OurServices from "../lib/components/ourServices.svelte"
 
   let banner = null;
 
@@ -50,6 +51,7 @@
   <p>Loading...</p>
 {/if}
 <TitleDescription />
+<OurServices />
 
 <style>
 
