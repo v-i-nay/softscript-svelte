@@ -3,6 +3,7 @@
   import axios from "axios";
   import TitleDescription from "../lib/components/titleDescription.svelte"
   import OurServices from "../lib/components/ourServices.svelte"
+  import Testimonials from "../lib/components/testimonials.svelte"
 
   let banner = null;
 
@@ -52,6 +53,7 @@
 {/if}
 <TitleDescription />
 <OurServices />
+<Testimonials />
 
 <style>
 
