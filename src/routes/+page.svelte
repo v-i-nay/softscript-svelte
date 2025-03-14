@@ -4,6 +4,9 @@
   import TitleDescription from "../lib/components/titleDescription.svelte"
   import OurServices from "../lib/components/ourServices.svelte"
   import Testimonials from "../lib/components/testimonials.svelte"
+  import Footer from "../lib/components/footer.svelte"
+  import Header from "../lib/components/header.svelte"
+  import Banner from "../lib/components/banner.svelte"
 
   let banner = null;
 
@@ -24,6 +27,7 @@
     return `https://cdn.sanity.io/images/${import.meta.env.VITE_SANITY_PROJECT_ID}/${import.meta.env.VITE_SANITY_DATASET}/${parts[1]}-${parts[2]}.${parts[3]}`;
   }
 </script>
+<Header />
 
 {#if banner}
   <section
@@ -51,11 +55,14 @@
 {:else}
   <p>Loading...</p>
 {/if}
+
 <TitleDescription />
 <OurServices />
 <Testimonials />
+<Footer />
 
 <style>
+
 
   .banner {
     position: relative;
@@ -69,6 +76,7 @@
     background: rgba(0, 0, 0, 0.6);
   }
   .banner:after {
+    content:'';
     position: absolute;
     right: 0;
     bottom: 0;

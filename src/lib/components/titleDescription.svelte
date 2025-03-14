@@ -1,60 +1,102 @@
 <script>
-  import { onMount } from "svelte";
-  import axios from "axios";
-  import { PortableText } from "@portabletext/svelte";
+  import axios from 'axios';
+  import { onMount } from 'svelte';
 
-  let titleDescription = null;
+  export let apiUrl = import.meta.env.VITE_SANITY_API_TITLE_DESCRIPTION;
+  let title = [];
+  let description = [];
 
-  onMount(async () => {
+  async function fetchData() {
     try {
-      const response = await axios.get(import.meta.env.VITE_SANITY_API_TITLE_DESCRIPTION);
-      console.log(response);
-      console.log("API Response:", response.data);
-      titleDescription = response.data.result[0] || null; // Ensure it's not undefined
-    } catch (error) {
-      console.error("Error fetching title and description:", error);
-    }
-  });
+      const response = await axios.get(apiUrl);
+      const data = response.data;
 
-  // Define how to render bold text & links safely
-  const components = {
-    marks: {
-      strong: ({ children }) => `<strong>${children}</strong>`,
-      link: ({ children, value }) => {
-        return value?.href 
-          ? `<a href="${value.href}" target="_blank" rel="noopener">${children}</a>` 
-          : children; // If no href, return plain text
+      if (data.result && data.result.length > 0) {
+        let content = data.result[0];
+
+        // Process title as an array for correct rendering
+        title = content.title[0].children.map(t => ({
+          text: t.text,
+          isStrong: t.marks.includes('strong')
+        }));
+
+        // Process description as an array for proper rendering
+        description = content.description.map(d => ({
+          children: d.children.map(span => {
+            let mark = d.markDefs.find(m => m._key === span.marks[0]);
+
+            return {
+              text: span.text,
+              isStrong: span.marks.includes('strong'),
+              isLink: mark && mark._type === 'link',
+              href: mark ? mark.href : null
+            };
+          })
+        }));
       }
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
-  };
+  }
+
+  onMount(fetchData);
 </script>
 
-{#if titleDescription}
-  <section class="title-description">
-    <h1>
-      <PortableText value={titleDescription.title} components={components} />
-    </h1>
+<svelte:head>
+  <title>Softscripts</title>
+</svelte:head>
 
-    <p>
-      <PortableText value={titleDescription.description} components={components} />
-    </p>
-  </section>
-{:else}
-  <p>Loading...</p>
-{/if}
+<div class="max-widthcontainer">
+  <!-- Title Section -->
+  <h2>
+    {#each title as t}
+      {#if t.isStrong}
+        <br><span>{t.text}</span>
+      {:else}
+        {t.text}
+      {/if}
+    {/each}
+  </h2>
+
+  <!-- Description Section -->
+  <p class="soft-title-p">
+    {#each description as d}
+      {#each d.children as span}
+        {#if span.isLink}
+          <a href="{span.href}" target="_blank">{span.text}</a>
+        {:else if span.isStrong}
+          <strong>{span.text}</strong>
+        {:else}
+          {span.text}
+        {/if}
+      {/each}
+    {/each}
+  </p>
+</div>
 
 <style>
-  .title-description {
+  h2 {
     text-align: center;
-    padding: 20px;
+    font-size:44px;
   }
 
-  h1 strong {
-    color: #ff5733; /* Style for bold text */
+  h2 span {
+    color: #339beb;
   }
+  .max-widthcontainer {
+    max-width: 96%;
+    margin: auto;
+    padding-top: 10px;
+}
 
-  p a {
-    color: blue;
-    text-decoration: underline;
-  }
+.soft-title-p{
+    font-size: 25px;
+    line-height: 40px;
+    text-align: center;
+}
+.soft-title-p a{
+text-decoration:none;
+color: #339beb;
+}
+
 </style>
